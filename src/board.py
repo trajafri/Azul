@@ -245,6 +245,6 @@ def boards_to_str(bs):
 
 print(boards_to_str([Board(12, Board.WALL, Board.SG_AR, 0, False).place_move((0, 2)).place_move((4, 4)),
 Board(12, Board.WALL, Board.SG_AR, 0, False).place_move((0, 2)).place_move((4, 3)),
-Board(12, Board.WALL, Board.SG_AR, 0, False).add_tiles(FactorySet([t0,t0,t0,t1,one_tile],[]), -1, 2, t0)[0]
+Board(12, Board.WALL, Board.SG_AR, 0, False).add_tiles(FactorySet([t0,t0,t0,t1,t1,t3],[]), -1, 2, t0)[0]
 ]))
 

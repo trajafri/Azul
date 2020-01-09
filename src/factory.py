@@ -1,14 +1,13 @@
+import random
 from tile import *
 
 # number of tiles per factory
 F_SIZE = 4
 
 def make_bag():
-    return random.shuffle([t0] * 20 + 
-                          [t1] * 20 + 
-                          [t2] * 20 +
-                          [t3] * 20 + 
-                          [t4] * 20)
+    ls = [t0] * 20 + [t1] * 20 + [t2] * 20 + [t3] * 20 + [t4] * 20
+    random.shuffle(ls)
+    return ls
 
 def necessary_factories(players):
     return 2 * (players - 2) + 5
@@ -29,7 +28,9 @@ class FactorySet(object):
         self.factories = factories
     
 def restock(bag, n):
-    shuffled_bag = random.shuffle(bag)
+    bag_cp = [b for b in bag]
+    random.shuffle(bag_cp)
+    shuffled_bag = bag_cp
     tiles        = shuffled_bag[:F_SIZE * n]
     new_bag      = shuffled_bag[F_SIZE * n - 1:]
     factories    = split_by(tiles, F_SIZE)
@@ -68,7 +69,7 @@ def fact_to_los(f, i):
     tiles = ""
     for t in f:
         tiles = tiles + tile_to_str(t)
-    return ["|" + label, "|  " + (" " * (F_SIZE - len(f))), tiles + " "]
+    return ["|" + label, "|  " + (" " * (F_SIZE - len(f))) + tiles + " "]
 
 def mid_to_los(m):
     label = "middle" + (" " * max(0, len(m) - 4))

@@ -29,11 +29,11 @@ def tile_to_idx(t):
 
 def tile_comp(t0, t1):
     if (t0 == one_tile):
-        return False
+        return 1 
     elif (t1 == one_tile):
-        return True 
+        return -1
     else:
-        return tiles.index(t0) < tiles.index(t1)
+        return -1 if tiles.index(t0) < tiles.index(t1) else 0 if tiles.index(t0) == tiles.index(t1) else 1
 
 ################################
 # Printing Utilities           #
