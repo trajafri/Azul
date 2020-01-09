@@ -1,0 +1,73 @@
+import tile
+
+# number of tiles per factory
+F_SIZE = 4
+
+def make_bag():
+    return random.shuffle(list.extend([t0] * 20, 
+                          list.extend([t1] * 20, 
+                          list.extend([t2] * 20,
+                          list.extend([t3] * 20, 
+                                      [t4] * 20)))))
+
+def necessary_factories(players):
+    return 2 * (players - 2) + 5
+
+def split_by(ls, n):
+    if len(ls) == 0:
+        return []
+    elif len(ls) < n:
+        return [ls]
+    else:
+        return (split_by(ls[:n-1], n)).insert(0, ls[:n])
+
+class FactorySet(object):
+    def __init__(self, middle, factories):
+        self.middle    = middle
+        self.factories = factories
+    
+def restock(bag, n):
+    shuffled_bag = random.shuffle(bag)
+    tiles        = shuffled_bag[:F_SIZE * n]
+    new_bag      = shuffled_bag[F_SIZE * n - 1:]
+    factories    = split_by(tiles, F_SIZE)
+    return new_bag, FactorySet([one_tile], factories)
+
+def partition_by(pred, ls):
+    ans = []
+    for t in ls:
+        if pred(t):
+            list.append(ans, t)
+    return ans
+
+def partition_factory(tile, f):
+    return partition_by(lambda x: x == tile or x == one_tile, f)
+
+def pull_from_factory(i, tile, fact_set):
+    if i < 0:
+        same, diff = partition_factory(tile, fact_set.middle)
+        return same, FactorySet(diff, fact_set.factories) 
+    else:
+        desired_factory = fact_set.factories[i]
+        same, diff = partition_factory(tile, desired_factory)
+        return same, FactorySet(list.append(diff, fact_set.middle), 
+                                [[] if j == i else fact_set.factories[j] 
+                                 for j in range(len(fact_set.factories))])
+
+################################
+# Printing Utilities           #
+################################
+
+def fact_to_los(f, i):
+    label = "f-" + str(i) + (" " * F_SIZE)
+    tiles = ""
+    for t in f:
+        tiles = tiles + tile_to_str(t)
+    return ["|" + label, "|  " + (" " * (F_SIZE - len(f))), tiles + " "]
+
+def mid_to_los(m):
+    label = "middle" + (" " * max(0, len(m) - 4))
+    tiles = ""
+    for t in m:
+        tiles = tiles + tile_to_str(t)
+    return ["|" + label, "|  " + tiles]
