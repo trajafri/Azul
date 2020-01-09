@@ -1,14 +1,14 @@
-import tile
+from tile import *
 
 # number of tiles per factory
 F_SIZE = 4
 
 def make_bag():
-    return random.shuffle(list.extend([t0] * 20, 
-                          list.extend([t1] * 20, 
-                          list.extend([t2] * 20,
-                          list.extend([t3] * 20, 
-                                      [t4] * 20)))))
+    return random.shuffle([t0] * 20 + 
+                          [t1] * 20 + 
+                          [t2] * 20 +
+                          [t3] * 20 + 
+                          [t4] * 20)
 
 def necessary_factories(players):
     return 2 * (players - 2) + 5
@@ -19,7 +19,9 @@ def split_by(ls, n):
     elif len(ls) < n:
         return [ls]
     else:
-        return (split_by(ls[:n-1], n)).insert(0, ls[:n])
+        rec = split_by(ls[n:], n)
+        rec.insert(0, ls[:n])
+        return rec
 
 class FactorySet(object):
     def __init__(self, middle, factories):
@@ -35,10 +37,13 @@ def restock(bag, n):
 
 def partition_by(pred, ls):
     ans = []
+    other = []
     for t in ls:
         if pred(t):
             list.append(ans, t)
-    return ans
+        else:
+            list.append(other, t)
+    return ans, other
 
 def partition_factory(tile, f):
     return partition_by(lambda x: x == tile or x == one_tile, f)

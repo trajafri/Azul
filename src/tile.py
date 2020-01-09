@@ -57,10 +57,10 @@ def tile_to_color(t):
 
 # foreground -> background
 def f_to_b(s):
-    return string.replace(s, "3", "4", 1)
+    return s.replace("3", "4", 1)
 
 tile_map = {tiles[i]: color_map[tiles[i]] + str(i) + norm for i in range(len(tiles))}
 tile_map[one_tile] = f_grn + one_tile + norm
 
-def tile_str(t):
-    return tile_map(t)
+def tile_to_str(t):
+    return tile_map[t]
