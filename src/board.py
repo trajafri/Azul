@@ -141,11 +141,11 @@ class Board(object):
         if to_overflow:
             return self.wipe_turn(tiles, new_fset, is_one_tile)
         else:
-            amount_to_add  = len(tiles) if is_one_tile else len(tiles) - 1
+            amount_to_add  = (len(tiles) - 1) if is_one_tile else len(tiles)
             current_amount = self.staging[i - 1][0] if not to_overflow and self.staging[i - 1][1] else 0 
-            leftover       = max(amount_to_add - i - current_amount, 0)
+            leftover       = max(amount_to_add - (i - current_amount), 0)
             new_extra      = min(leftover + (1 + self.error_count if is_one_tile else self.error_count), len(self.OFLOW))
-            new_stage      = [add_tiles_to_line(amount_to_add, tile, sg) for sg in self.staging]
+            new_stage      = [add_tiles_to_line(amount_to_add, tile, (a, d)) if (a == i) else (a, d) for (a, d) in self.staging]
             return (Board(self.score, self.wall, new_stage, new_extra, update_one_tile(self.one_tile, is_one_tile))
                     , new_fset)
 
