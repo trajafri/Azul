@@ -133,7 +133,7 @@ class Board(object):
 
     def wipe_turn(self, tiles, factoryset, is_one_tile):
         amt_tiles = len(tiles)
-        new_extra = min(1 + amt_tiles if is_one_tile else amt_tiles, len(self.OFLOW))
+        new_extra = min(self.error_count + (1 + amt_tiles if is_one_tile else amt_tiles), len(self.OFLOW))
         return (Board(self.score, self.wall, self.staging, new_extra, update_one_tile(self.one_tile, is_one_tile))
                 , factoryset)
 
@@ -161,8 +161,10 @@ class Board(object):
 
     def calculate_bonus(self):
         flat_wall       = [item for l in self.wall for item in l]
-        transpose       = lambda l: [l[j][i] for j in range(len(l)) for i in range(len(l[0]))]
+        transpose       = lambda l: [[l[j][i] for i in range(len(l[0]))] for j in range(len(l))]
         count_full_rows = lambda l: [all([d for (a, d) in r]) for r in l].count(True)
+        print(self.wall)
+        print(transpose(self.wall))
         horizontals     = count_full_rows(self.wall)
         verticals       = count_full_rows(transpose(self.wall))
 
@@ -239,7 +241,7 @@ def boards_to_str(bs):
         for bo in boards:
             (b, i) = bo
             xs     = b.board_to_los(i)
-            b_res  = [b_res[i] + board_pad + xs[i] for i in range(len(b_res))]
+            b_res  = [b_res[i] + xs[i] + board_pad for i in range(len(b_res))]
         b_res = [s + "\n" for s in b_res]
         for s in b_res:
             result = result + s
