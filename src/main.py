@@ -50,7 +50,7 @@ def end_game(st, gn = False):
         print("Final Boards")
         print(boards_to_str(st.bs))
         print("Winner(s): ", end="")
-        print(f_winners + "\n")
+        print(str(f_winners) + "\n")
         i = 1
         for b in ranked_boards:
             print(f"{i}. Player {new_boards.index(b) + 1}\t{b.score}")
