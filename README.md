@@ -5,5 +5,11 @@ This repository contains a simple implementation of the Azul board game, impleme
 This implementation is a port of a [Racket](https://racket-lang.org/) implementation of Azul written
 for a school project.
 
-The purpose of this repository is to allow people experiment with Azul by writing AIs and using
-Python's AI/ML libraries.
+Note that:
+
+* This implementation lacks documentation. If needed, they can be requested by a PR.
+* Python used in this project is a bit awkward. This is due to direct translation of the original implementation.
+
+## Playing
+
+Simply run `main.py` to play the game.
