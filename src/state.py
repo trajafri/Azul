@@ -80,10 +80,10 @@ class State(object):
             mid_str = mid_str + x + "\n"
         return factories_sep + fact_str + mid_str + "\n" + board_str
 
-print(State(4, 
-            [], 
-            [Board(0, Board.WALL, Board.SG_AR, 0, False)] * 4, 
-            0,
-            restock(make_bag(), necessary_factories(4))[1],
-            necessary_factories(4),
-            []).state_to_str())
+#print(State(4, 
+#            [], 
+#            [Board(0, Board.WALL, Board.SG_AR, 0, False)] * 4, 
+#            0,
+#            restock(make_bag(), necessary_factories(4))[1],
+#            necessary_factories(4),
+#            []).state_to_str())
