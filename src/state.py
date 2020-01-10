@@ -15,7 +15,7 @@ class State(object):
         self.bag  = bag 
 
     def is_last_round(self):
-        return any([contains_full_row(b) for b in self.bs])
+        return any([b.contains_full_row() for b in self.bs])
 
     def is_round_end(self):
         return all([len(f) == 0 for f in self.fset.factories + self.fset.middle])
@@ -26,7 +26,13 @@ class State(object):
     def play_move(self, move):
         (move_factory_idx, move_tile, move_line_num) = move
         new_board, new_factory_set = self.bs[self.t].add_tiles(self.fset, move_factory_idx - 1, move_line_num + 1, move_tile)
-        return State(self.np, self.ps, [new_board if i == self.t else b for b in self.bs], self.next_turn, new_factory_set)
+        return State(self.np,
+                     self.ps,
+                     [new_board if i == self.t else self.bs[i] for i in range(len(self.bs))],
+                     self.next_turn(),
+                     new_factory_set,
+                     self.nf,
+                     self.bag)
     
     def end_info(self):
         new_boards = [b.bonusify_board() for b in self.bs]

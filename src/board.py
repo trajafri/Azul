@@ -10,7 +10,7 @@ def place_move_wall(p, w):
 def count_points(p, w):
     (x, y)    = p
     top_vec   = 0
-    for i in range(y-1, 0, -1):
+    for i in range(y-1, -1, -1):
         if not w[x][i][1]:
             break
         top_vec += 1
@@ -20,7 +20,7 @@ def count_points(p, w):
             break
         bot_vec += 1
     left_vec  = 0
-    for i in range(x-1, 0, -1):
+    for i in range(x-1, -1, -1):
         if not w[i][y][1]:
             break
         left_vec += 1
@@ -33,10 +33,13 @@ def count_points(p, w):
     hori_count = left_vec + right_vec
     return 1 +  vert_count + hori_count + (0 if (hori_count * vert_count == 0) else 1)
 
-def is_stageline_ready(sgl, w):
-    n      = sgl
-    (c, t) = w
-    return t if n == c else False
+def is_stageline_ready(sgl):
+    (n, d) = sgl
+    if not d:
+        return False
+    else:
+        (c, t) = d
+        return t if n == c else False
 
 def overflow_error(n):
     return sum(Board.OFLOW[:n])
@@ -71,7 +74,7 @@ def add_tiles_to_line(amt, tile, line):
     else:
         idx = line[0]
         (k, tile2) = line[1]
-        if tile1 != tile2:
+        if tile != tile2:
             raise Exception("add_tiles_to_line")
         k_cap = idx - k
         new_k = k + min(reasonable_amt, k_cap)
@@ -126,12 +129,12 @@ class Board(object):
         reduced_score     = overflow_error(self.error_count) + self.score
         net_pts, new_wall = place_and_score_staging(reduced_score, self.staging, self.wall) 
         score = max(0, net_pts)
-        return reset_lines(Board(score, new_wall, self.staging, 0, False))
+        return Board(score, new_wall, self.staging, 0, False).reset_lines()
 
     def wipe_turn(self, tiles, factoryset, is_one_tile):
         amt_tiles = len(tiles)
         new_extra = min(1 + amt_tiles if is_one_tile else amt_tiles, len(self.OFLOW))
-        return (Board(self.score, self.wall, self.stage, update_one_tile(self.one_tile, is_one_tile))
+        return (Board(self.score, self.wall, self.staging, new_extra, update_one_tile(self.one_tile, is_one_tile))
                 , factoryset)
 
     def add_tiles(self, fset, f, i, tile):
@@ -142,7 +145,7 @@ class Board(object):
             return self.wipe_turn(tiles, new_fset, is_one_tile)
         else:
             amount_to_add  = (len(tiles) - 1) if is_one_tile else len(tiles)
-            current_amount = self.staging[i - 1][0] if not to_overflow and self.staging[i - 1][1] else 0 
+            current_amount = self.staging[i - 1][1][0] if not to_overflow and self.staging[i - 1][1] else 0 
             leftover       = max(amount_to_add - (i - current_amount), 0)
             new_extra      = min(leftover + (1 + self.error_count if is_one_tile else self.error_count), len(self.OFLOW))
             new_stage      = [add_tiles_to_line(amount_to_add, tile, (a, d)) if (a == i) else (a, d) for (a, d) in self.staging]
@@ -187,7 +190,7 @@ class Board(object):
         board_rows    = [(str(i), sg_line_to_str(self.staging[i]), w_line_to_str(self.wall[i]))
                          for i in range(len(self.wall))]
         largest_line  = max([a for (a, d) in self.staging])
-        player_str    = "Player #" + str(p)
+        player_str    = "Player #" + str(p + 1)
         sep           = "+" + ("-" * len(player_str)) + "+ "
         sep_pad       = 18 #only thing hard coded in this printing
         separator     = sep + (" " * sep_pad)
@@ -243,8 +246,8 @@ def boards_to_str(bs):
         result += "\n"
     return result
 
-print(boards_to_str([Board(12, Board.WALL, Board.SG_AR, 0, False).place_move((0, 2)).place_move((4, 4)),
-Board(12, Board.WALL, Board.SG_AR, 0, False).place_move((0, 2)).place_move((4, 3)),
-Board(12, Board.WALL, Board.SG_AR, 0, False).add_tiles(FactorySet([t0,t0,t0,t1,t1,t3],[]), -1, 2, t0)[0]
-]))
+#print(boards_to_str([Board(12, Board.WALL, Board.SG_AR, 0, False).place_move((0, 2)).place_move((4, 4)),
+#Board(12, Board.WALL, Board.SG_AR, 0, False).place_move((0, 2)).place_move((4, 3)),
+#Board(12, Board.WALL, Board.SG_AR, 0, False).add_tiles(FactorySet([t0,t0,t0,t1,t1,t3],[]), -1, 2, t0)[0]
+#]))
 

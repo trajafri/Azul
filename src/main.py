@@ -8,7 +8,7 @@ import random
 # This can be improved a lot. This is ported as is and we didn't care a lot about the
 # interface since we were more concerned about the AI side instead of the interface side.
 
-NUM_P = 3
+NUM_P = 2
 
 def game_state():
     start_bag     = make_bag()
@@ -20,16 +20,16 @@ def game_state():
     return State(num_players, players, boards, random.randint(0, num_players-1), fset, num_factories, the_bag)
 
 def clean_up(st, gn = False):
-    next_turn     = [i for i in range(len(st.bs)) if st.bs[i].one_tile][0]
+    next_t     = [i for i in range(len(st.bs)) if st.bs[i].one_tile][0]
     the_bag, fset = restock(st.bag, st.nf)
     new_boards    = [b.update_score() for b in st.bs]
     new_state     = State(st.np,
                           st.ps,
                           new_boards,
-                          st.next_turn(),
+                          next_t,
                           fset,
                           st.nf,
-                          make-bag())
+                          make_bag())
     return next_state(new_state, gn)
 
 def make_a_move(st, gn = False):
@@ -65,3 +65,5 @@ def next_state(st, gn = False):
 
 def go():
     return next_state(game_state())
+
+go()

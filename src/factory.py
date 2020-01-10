@@ -56,7 +56,7 @@ def pull_from_factory(i, tile, fact_set):
     else:
         desired_factory = fact_set.factories[i]
         same, diff = partition_factory(tile, desired_factory)
-        return same, FactorySet(list.append(diff, fact_set.middle), 
+        return same, FactorySet(diff + fact_set.middle, 
                                 [[] if j == i else fact_set.factories[j] 
                                  for j in range(len(fact_set.factories))])
 

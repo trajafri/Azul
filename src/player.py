@@ -7,9 +7,11 @@ def manual_player(st, b):
     print(st.state_to_str() + "\n")
     print(f"You are player {st.t + 1} ")
     print("Input m represents the middle factory, a line number out of range goes in overflow.")
-    inp       = raw_input("Input format (factory-number tile-number line-number)\n: ")
+    inp       = input("Input format (factory-number tile-number line-number): ")
     maybe_err = validate_input(st, b, parse_input(inp))
     while(isinstance(maybe_err, str)):
+        print(maybe_err)
+        print("Try again: ", end="")
         maybe_err = validate_input(st, b, parse_input(input()))
     return maybe_err
 
@@ -48,13 +50,13 @@ def sanitize(f_id, tile, line_num):
 ################################
 
 def is_valid_f_id(f_id, num_factories):
-    return f_id == "m" or (isinstance(f_id, numbers.Number) and x > 0 and x <= num_factories)
+    return f_id == "m" or (isinstance(f_id, int) and f_id > 0 and f_id <= num_factories)
 
 def is_valid_tile(t):
-    return isinstance(t, numbers.Number) and t < len(tiles)
+    return isinstance(t, int) and t < len(tiles)
 
-def is_valid_lin_num(n):
-    return isinstance(n, numbers.Number)
+def is_valid_line_num(n):
+    return isinstance(n, int)
 
 def invalid_factory_move(tile, f_id, fset):
     factory_in_question = fset.middle if f_id == "m" else fset.factories[f_id - 1]
@@ -72,7 +74,7 @@ def invalid_tile_move(tile, stg_lin_num, b):
         return False
     else:
         stg_line      = b.staging[stg_lin_num]
-        is_valid_line = not stg_line[0] or stg_line[1][1] == tile
+        is_valid_line = not stg_line[1] or stg_line[1][1] == tile
         if not is_valid_line:
             return "can't place a tile on a line that contains a different colored tile"
         elif any([p[0] == tile and p[1] for p in b.wall[stg_lin_num]]):
